@@ -11,7 +11,7 @@ clock_bahi = pygame.time.Clock()
 
 #tuime passed between two frames..
 dt = 0
-speed = pygame.Vector2(70 , 100)
+speed = pygame.Vector2(200 , 300)
 
 #window khuli rakhne ke liye...
 running = True

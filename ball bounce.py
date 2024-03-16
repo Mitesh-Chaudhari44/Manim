@@ -1,38 +1,32 @@
-from manim import *
+import pygame
+from pygame.draw import circle
 
-class BouncingBall(Scene):
-    def construct(self):
-        # Create a ball
-        ball = Circle(radius=0.5, color=BLUE, fill_opacity=1)
+pygame.init()
+i =1
+window_1 = pygame.display.set_mode((500,500))
+clock_bhai = pygame.time.Clock()
+dt = 1
+speed = pygame.Vector2(0,30)  # Set horizontal speed to 0
+player_pos = pygame.Vector2(window_1.get_width() / 2 , window_1.get_height() / 2)
+running = True
 
-        # Set initial position and velocity
-        ball.next_to(ORIGIN, UP)
-        velocity = 1.5
+while running:
+    window_1.fill("black")
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-        # Add ball to the scene
-        self.add(ball)
+    player_pos += speed * dt
+    gola = pygame.draw.circle(window_1, "red", (int(player_pos.x), int(player_pos.y)), 20)
 
-        # Create animation
-        self.play(
-            ball.animate.shift(3 * DOWN).set_color(RED),  # Initial bounce
-            rate_func=linear,
-            run_time=1
-        )
+    # Check for collision with window boundaries and reverse the speed if needed
+    if player_pos.y < 20  :  
+        speed.y *= -1
+        i += 1
+    elif player_pos.y > window_1.get_height() - 20:
+        speed.y *= -1
+    pygame.display.flip()
+    dt = clock_bhai.tick(60) / 60
 
-        # Simulate energy loss
-        for _ in range(10):
-            self.play(
-                ball.animate.shift(3 * DOWN).set_color(RED),
-                rate_func=linear,
-                run_time=1
-            )
-            velocity *= 0.8  # Energy loss factor
-
-        # Bounce with decreasing energy
-        for _ in range(10):
-            self.play(
-                ball.animate.shift(velocity * DOWN),
-                rate_func=linear,
-                run_time=1
-            )
-            velocity *= 0.8  # Energy loss factor
+pygame.quit()
